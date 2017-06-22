@@ -1,0 +1,7 @@
+name = Webform validators for Spanish NIF and NIE
+description = Webform validators for Spanish NIF and NIE
+core = 7.x
+package = JPG
+
+dependencies[] = webform:webform
+dependencies[] = webform_validation:webform_validation

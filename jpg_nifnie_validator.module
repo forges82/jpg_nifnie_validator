@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * Implements hook_webform_validation_validators().
+ */
+function jpg_nifnie_validator_webform_validation_validators() {
+  return array(
+    'jpg_validate_nif' => array(
+      'name' => "Validate NIF",
+        'component_types' => array(
+          'textfield',
+        ),
+    ),
+    'jpg_validate_nie' => array(
+      'name' => "Validate NIE",
+        'component_types' => array(
+          'textfield',
+        ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_webform_validation_validate().
+ */
+function jpg_nifnie_validator_webform_validation_validate($validator_name, $items, $components, $rule) {
+  if ($items) {
+    switch ($validator_name) {
+      case 'jpg_validate_nif':
+        $errors = array();
+        foreach ($items as $key => $val) {
+          if((strcmp($val,''))!=0) {
+            $letter = substr($val, -1);
+            $numbers = substr($val, 0, -1);
+            if ( substr("TRWAGMYFPDXBNJZSQVHLCKE", $numbers%23, 1) == $letter && strlen($letter) == 1 && strlen ($numbers) == 8 ){
+              1;
+            } else {
+              $errors[$key] = t('NIF format is wrong.', array('%item' => $components[$key]['name']));
+            }
+          }
+        }
+        return $errors;
+        break;
+      case 'jpg_validate_nie':
+        $errors = array();
+        foreach ($items as $key => $val) {
+          if((strcmp($val,''))!=0) {
+            $letter = strtoupper(substr($val, 0,1));
+            if (( $letter != 'X' ) && ( $letter != 'Y' ) && ( $letter != 'Z' )) {
+              $errors[$key] = t('NIE must start by X, Y or Z.', array('%item' => $components[$key]['name']));
+            }
+          }
+        }
+        return $errors;
+        break;
+    }
+  }
+}
